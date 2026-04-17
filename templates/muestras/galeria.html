@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}Galería de Diseños - Muestrario{% endblock %}
+
+{% block content %}
+<section class="galeria-section">
+    <div class="container">
+        <h2 class="galeria-title">Mis Diseños Web</h2>
+        <p class="galeria-subtitle">Explora mis proyectos y diseños web realizados</p>
+        
+        <div class="galeria-grid">
+            {% for diseño in diseños %}
+            <a href="{{ diseño.url }}" target="_blank" class="tarjeta-diseño">
+                <div class="tarjeta-imagen">
+                    {% if diseño.imagen_preview %}
+                        <img src="{{ diseño.imagen_preview.url }}" alt="{{ diseño.nombre }}" class="preview-img">
+                    {% else %}
+                        <div class="preview-placeholder">
+                            <span>{{ diseño.nombre }}</span>
+                        </div>
+                    {% endif %}
+                    <div class="overlay-visit">
+                        <span class="visit-text">Visitar Sitio</span>
+                    </div>
+                </div>
+                
+                <div class="tarjeta-info">
+                    <h3 class="tarjeta-titulo">{{ diseño.nombre }}</h3>
+                    <p class="tarjeta-descripcion">{{ diseño.descripcion }}</p>
+                    {% if diseño.tecnologias %}
+                        <div class="tecnologias">
+                            {% for tech in diseño.tecnologias.split|slice:":3" %}
+                                <span class="tech-tag">{{ tech|safe }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </a>
+            {% empty %}
+            <div class="sin-diseños">
+                <p>No hay diseños disponibles aún.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- NUEVA SECCIÓN DE PROYECTOS WEB -->
+<section class="proyectos-section">
+    <div class="container">
+        <h2 class="proyectos-title">Mis Proyectos Web</h2>
+        <p class="proyectos-subtitle">Descubre las webs que he desarrollado para ti</p>
+        
+        <div class="proyectos-grid">
+            {% for proyecto in proyectos %}
+            <a href="{{ proyecto.url }}" target="_blank" class="tarjeta-proyecto scroll-animate">
+                <div class="proyecto-header">
+                    <div class="proyecto-icono">{{ proyecto.icono }}</div>
+                </div>
+                
+                <div class="proyecto-imagen">
+                    <img src="{{ proyecto.imagen.url }}" alt="{{ proyecto.titulo }}" class="proyecto-img">
+                    <div class="proyecto-overlay">
+                        <span class="proyecto-btn">Visitar Web</span>
+                    </div>
+                </div>
+                
+                <div class="proyecto-info">
+                    <h3 class="proyecto-titulo">{{ proyecto.titulo }}</h3>
+                    <p class="proyecto-descripcion">{{ proyecto.descripcion }}</p>
+                    
+                    {% if proyecto.tecnologias %}
+                        <div class="proyecto-tech">
+                            {% for tech in proyecto.tecnologias.split %}
+                                <span class="tech-badge">{{ tech }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </a>
+            {% empty %}
+            <div class="sin-proyectos">
+                <p>Próximamente más proyectos web...</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<script>
+// Scroll Animation Observer
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver(function(entries) {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+        }
+    });
+}, observerOptions);
+
+// Observar todas las tarjetas de proyectos
+document.querySelectorAll('.scroll-animate').forEach(el => {
+    observer.observe(el);
+});
+</script>
+{% endblock %}
